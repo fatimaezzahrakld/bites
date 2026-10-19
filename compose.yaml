@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bites
+      POSTGRES_USER: bites
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-localdevpassword}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bites -d bites"]
+      interval: 5s
+      retries: 15
+  app:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/bites
+      DB_USER: bites
+      DB_PASSWORD: ${DB_PASSWORD:-localdevpassword}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:
