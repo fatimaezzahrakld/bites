@@ -1,25 +1,32 @@
+name: bites-uncommon-final
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: bites
       POSTGRES_USER: bites
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-localdevpassword}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-local-bites-password}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - bites_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U bites -d bites"]
       interval: 5s
-      retries: 15
+      timeout: 5s
+      retries: 20
   app:
     build: .
-    ports: ["8080:8080"]
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:8080"
     environment:
       DB_URL: jdbc:postgresql://db:5432/bites
       DB_USER: bites
-      DB_PASSWORD: ${DB_PASSWORD:-localdevpassword}
+      DB_PASSWORD: ${DB_PASSWORD:-local-bites-password}
+      DEMO_SEED: ${DEMO_SEED:-true}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-BitesDemo2026!}
     depends_on:
       db:
         condition: service_healthy
 volumes:
-  pgdata:
+  bites_pgdata:

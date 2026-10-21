@@ -1,0 +1,3 @@
+Copyright (c) 2026 UNCOMMON DIGITAL. All rights reserved.
+
+No permission is granted to use, copy, modify, distribute, or sublicense this code except as required by applicable law or with prior written permission from the copyright holder.

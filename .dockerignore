@@ -1,0 +1,7 @@
+.git
+.env
+.gitignore
+target
+.idea
+.vscode
+*.zip
